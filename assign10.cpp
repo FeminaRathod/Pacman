@@ -2,11 +2,42 @@
 // Course: CSE 2050
 // Project: assign10
 
+/*
+
+	How to run the code :
+		- firstly make the structure of the folder look like this
+
+			PacManGame/
+			├── include/       ← Contains GL/glut.h
+			├── lib/           ← Contains freeglut.lib or libfreeglut.a
+			├── bin/           ← Output folder, also place freeglut.dll here
+			├── pacman.cpp     ← Your source code
+
+		- open command prompt [Terminal] -> go to your project folder
+
+			cd path\to\PacManGame
+			"C:\Users\Femina\OneDrive\Desktop\PackMan"
+
+		- Compiple the file
+
+			g++ pacman.cpp -Iinclude -Llib -lfreeglut -lopengl32 -lglu32 -o bin/pacman.exe
+
+		- Run the game (.exe file)
+
+			bin\pacman.exe
+
+		- Win the game :
+
+			1st Winner : Harmit :)
+
+*/
+
 #include <stdlib.h>
 #include <vector>
 #include <deque>
+#include <string>
 #include <windows.h>
-#include <GL/glut.h>
+#include "include/GL/glut.h"
 #include <iostream>
 #include <string>
 #define _USE_MATH_DEFINES
@@ -35,23 +66,23 @@ bool* keyStates = new bool[256]; // record of all keys pressed
 int points = 0; // total points collected
 
 //Initializes the game with the appropiate information 
-void init(void){
+void init(void) {
 	//clear screen
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glShadeModel(GL_FLAT);
 	//reset all keys
-	for (int i = 0; i < 256; i++){
+	for (int i = 0; i < 256; i++) {
 		keyStates[i] = false;
 	}
 	//fill the bitmap with the obstacles
 	bitmap.push_back({ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true });
 	bitmap.push_back({ true, false, false, false, false, false, false, false, false, false, false, false, false, false, true });
 	bitmap.push_back({ true, false, true, true, true, true, false, true, true, false, true, true, true, false, true });
-	bitmap.push_back({ true, false, false, false, false, true, false, true, false, false, false, false, true, false, true});
-	bitmap.push_back({ true, false, true, true, false, false, false, false, false, true, true, false, false, false, true});
-	bitmap.push_back({ true, false, false, true, true, false, true, true, true, true, false, false, true, false, true});
-	bitmap.push_back({ true, true, false, false, false, false, true, false, true, true, false, true, true, false, true});
-	bitmap.push_back({ true, true, true, true, true, false, false, false, true, false, false, false, false, false, true});
+	bitmap.push_back({ true, false, false, false, false, true, false, true, false, false, false, false, true, false, true });
+	bitmap.push_back({ true, false, true, true, false, false, false, false, false, true, true, false, false, false, true });
+	bitmap.push_back({ true, false, false, true, true, false, true, true, true, true, false, false, true, false, true });
+	bitmap.push_back({ true, true, false, false, false, false, true, false, true, true, false, true, true, false, true });
+	bitmap.push_back({ true, true, true, true, true, false, false, false, true, false, false, false, false, false, true });
 	bitmap.push_back({ true, true, false, false, false, false, true, false, true, true, false, true, true, false, true });
 	bitmap.push_back({ true, false, false, true, true, false, true, true, true, true, false, false, true, false, true });
 	bitmap.push_back({ true, false, true, true, false, false, false, false, false, true, true, false, false, false, true });
@@ -62,29 +93,29 @@ void init(void){
 }
 
 //Method to draw the obstacle course and the walls
-void drawLaberynth(){
+void drawLaberynth() {
 	glColor3f(1.0, 1.0, 1.0);
 	//Border
-	for (int i = 0; i < border.size(); i = i + 4){
-		glRectf(border.at(i) * squareSize, border.at(i + 1)*squareSize, border.at(i + 2)*squareSize, border.at(i + 3)*squareSize);
+	for (int i = 0; i < border.size(); i = i + 4) {
+		glRectf(border.at(i) * squareSize, border.at(i + 1) * squareSize, border.at(i + 2) * squareSize, border.at(i + 3) * squareSize);
 	}
 
 	//Obstacles
-	for (int j = 0; j < obstaclesBottom.size(); j = j + 4){
-		glRectf(obstaclesBottom.at(j) * squareSize, obstaclesBottom.at(j + 1)*squareSize, obstaclesBottom.at(j + 2)*squareSize, obstaclesBottom.at(j + 3)*squareSize);
+	for (int j = 0; j < obstaclesBottom.size(); j = j + 4) {
+		glRectf(obstaclesBottom.at(j) * squareSize, obstaclesBottom.at(j + 1) * squareSize, obstaclesBottom.at(j + 2) * squareSize, obstaclesBottom.at(j + 3) * squareSize);
 	}
-	for (int k = 0; k < obstaclesMiddle.size(); k = k + 4){
-		glRectf(obstaclesMiddle.at(k) * squareSize, obstaclesMiddle.at(k + 1)*squareSize, obstaclesMiddle.at(k + 2)*squareSize, obstaclesMiddle.at(k + 3)*squareSize);
+	for (int k = 0; k < obstaclesMiddle.size(); k = k + 4) {
+		glRectf(obstaclesMiddle.at(k) * squareSize, obstaclesMiddle.at(k + 1) * squareSize, obstaclesMiddle.at(k + 2) * squareSize, obstaclesMiddle.at(k + 3) * squareSize);
 	}
-	for (int p = 0; p < obstaclesTop.size(); p = p + 4){
-		glRectf(obstaclesTop.at(p) * squareSize, obstaclesTop.at(p + 1)*squareSize, obstaclesTop.at(p + 2)*squareSize, obstaclesTop.at(p + 3)*squareSize);
+	for (int p = 0; p < obstaclesTop.size(); p = p + 4) {
+		glRectf(obstaclesTop.at(p) * squareSize, obstaclesTop.at(p + 1) * squareSize, obstaclesTop.at(p + 2) * squareSize, obstaclesTop.at(p + 3) * squareSize);
 	}
 }
 
 //Method to check if the food has been eaten
-bool foodEaten(int x, int y, float pacmanX, float pacmanY){
-	if (x >= pacmanX - 16.0 *cos(359 * M_PI / 180.0) && x <= pacmanX + 16.0*cos(359 * M_PI / 180.0)){
-		if (y >= pacmanY - 16.0*cos(359 * M_PI / 180.0) && y <= pacmanY + 16.0*cos(359 * M_PI / 180.0)){
+bool foodEaten(int x, int y, float pacmanX, float pacmanY) {
+	if (x >= pacmanX - 16.0 * cos(359 * M_PI / 180.0) && x <= pacmanX + 16.0 * cos(359 * M_PI / 180.0)) {
+		if (y >= pacmanY - 16.0 * cos(359 * M_PI / 180.0) && y <= pacmanY + 16.0 * cos(359 * M_PI / 180.0)) {
 			return true;
 		}
 	}
@@ -92,11 +123,12 @@ bool foodEaten(int x, int y, float pacmanX, float pacmanY){
 }
 
 //Method to draw all the food left and delete the ate one
-void drawFood(float pacmanX, float pacmanY){
+void drawFood(float pacmanX, float pacmanY) {
 	deque<float> temp;
-	//check if the food has not been eaten
-	for (int i = 0; i < food.size(); i = i + 2){
-		if (!foodEaten(food.at(i)*squareSize, food.at(i + 1)*squareSize, pacmanX, pacmanY)){
+
+	// Check if food is eaten
+	for (int i = 0; i < food.size(); i += 2) {
+		if (!foodEaten(food.at(i) * squareSize, food.at(i + 1) * squareSize, pacmanX, pacmanY)) {
 			temp.push_back(food.at(i));
 			temp.push_back(food.at(i + 1));
 		}
@@ -105,199 +137,287 @@ void drawFood(float pacmanX, float pacmanY){
 		}
 	}
 	food.swap(temp);
-	glPointSize(5.0);
-	glBegin(GL_POINTS);
-	glColor3f(1.0, 1.0, 1.0);
-	//draw all the food avilable
-	for (int j = 0; j < food.size(); j = j + 2){
-		glVertex2f(food.at(j)*squareSize, food.at(j + 1)*squareSize);
+
+	// Draw all food available
+	for (int j = 0; j < food.size(); j += 2) {
+		float x = food.at(j) * squareSize;
+		float y = food.at(j + 1) * squareSize;
+
+		int foodType = (j / 2) % 3; // 3 different food types
+
+		switch (foodType) {
+		case 0: // Candy - colorful circle
+			glColor3f(1.0, 0.4, 0.8); // pink
+			glBegin(GL_POLYGON);
+			for (int i = 0; i < 360; i += 20) {
+				float angle = i * M_PI / 180.0;
+				glVertex2f(x + 3 * cos(angle), y + 3 * sin(angle));
+			}
+			glEnd();
+			break;
+
+		case 1: // Cookie - small brown square
+			glColor3f(0.8, 0.5, 0.2); // brown
+			glBegin(GL_QUADS);
+			glVertex2f(x - 2, y - 2);
+			glVertex2f(x + 2, y - 2);
+			glVertex2f(x + 2, y + 2);
+			glVertex2f(x - 2, y + 2);
+			glEnd();
+			break;
+
+		case 2: // Cheese slice - yellow triangle
+			glColor3f(1.0, 1.0, 0.2); // cheese yellow
+			glBegin(GL_TRIANGLES);
+			glVertex2f(x, y + 3);
+			glVertex2f(x - 3, y - 3);
+			glVertex2f(x + 3, y - 3);
+			glEnd();
+			break;
+		}
+
+		// Optional: sparkle
+		glColor3f(1.0, 1.0, 1.0);
+		glBegin(GL_LINES);
+		glVertex2f(x - 1, y - 1);
+		glVertex2f(x + 1, y + 1);
+		glVertex2f(x - 1, y + 1);
+		glVertex2f(x + 1, y - 1);
+		glEnd();
 	}
-	glEnd();
 }
+
 
 //Method to draw the pacman character through consicutive circle algorithm
-void drawPacman(float positionX, float positionY, float rotation){
-	int x, y;
-	glBegin(GL_LINES);
-	glColor3f(1.0, 1.0, 0.0);
-	for (int k = 0; k < 32; k++){
-		x = (float)k / 2.0 * cos((30 + 90*rotation) * M_PI / 180.0) + (positionX*squareSize);
-		y = (float)k / 2.0* sin((30 + 90 * rotation) * M_PI / 180.0) + (positionY*squareSize);
-		for (int i = 30; i < 330; i++){
-			glVertex2f(x, y);
-			x = (float)k / 2.0 * cos((i + 90 * rotation) * M_PI / 180.0) + (positionX*squareSize);
-			y = (float)k / 2.0* sin((i + 90 * rotation) * M_PI / 180.0) + (positionY*squareSize);
-			glVertex2f(x, y);
-		}
+void drawPacman(float positionX, float positionY, float rotation) {
+	float scale = 0.7f; // Adjust this to shrink or enlarge
+	float centerX = positionX * squareSize;
+	float centerY = positionY * squareSize;
+
+	// Spiky Pac-Man
+	glBegin(GL_TRIANGLES);
+	glColor3f(1.0, 1.0, 0.0); // Yellow
+	int spikes = 40;
+	float radius1 = squareSize * 0.9f * scale;
+	float radius2 = squareSize * 0.7f * scale;
+
+	for (int i = 30; i <= 330; i += 360 / spikes) {
+		float angle1 = (i + 90 * rotation) * M_PI / 180.0f;
+		float angle2 = ((i + (360 / spikes)) + 90 * rotation) * M_PI / 180.0f;
+
+		float r = ((i / (360 / spikes)) % 2 == 0) ? radius1 : radius2;
+
+		float x1 = centerX + r * cos(angle1);
+		float y1 = centerY + r * sin(angle1);
+		float x2 = centerX + r * cos(angle2);
+		float y2 = centerY + r * sin(angle2);
+
+		glVertex2f(centerX, centerY);
+		glVertex2f(x1, y1);
+		glVertex2f(x2, y2);
 	}
+	glEnd();
+
+	// Eye
+	glColor3f(0.0, 0.0, 0.0); // Black
+	glBegin(GL_POLYGON);
+	float eyeRadius = squareSize * 0.1f * scale;
+	float eyeX = centerX + squareSize * 0.3f * scale * cos((90 * rotation - 60) * M_PI / 180.0f);
+	float eyeY = centerY + squareSize * 0.3f * scale * sin((90 * rotation - 60) * M_PI / 180.0f);
+	for (int i = 0; i < 360; i += 10) {
+		float angle = i * M_PI / 180.0;
+		glVertex2f(eyeX + eyeRadius * cos(angle), eyeY + eyeRadius * sin(angle));
+	}
+	glEnd();
+
+	// Tongue
+	glColor3f(1.0, 0.0, 0.0); // Red
+	glBegin(GL_TRIANGLES);
+	float tongueLength = squareSize * 0.3f * scale;
+	float tongueBaseX = centerX + squareSize * 0.2f * scale * cos((90 * rotation) * M_PI / 180.0f);
+	float tongueBaseY = centerY + squareSize * 0.2f * scale * sin((90 * rotation) * M_PI / 180.0f);
+	glVertex2f(tongueBaseX, tongueBaseY);
+	glVertex2f(tongueBaseX + tongueLength * cos((90 * rotation + 0.2) * M_PI / 180.0f),
+		tongueBaseY + tongueLength * sin((90 * rotation + 0.2) * M_PI / 180.0f));
+	glVertex2f(tongueBaseX + tongueLength * cos((90 * rotation - 0.2) * M_PI / 180.0f),
+		tongueBaseY + tongueLength * sin((90 * rotation - 0.2) * M_PI / 180.0f));
 	glEnd();
 }
 
+
+
 //Method to draw the monster character through consecutive circles algorithm
-void drawMonster(float positionX, float positionY, float r, float g, float b){
+void drawMonster(float positionX, float positionY, float r, float g, float b) {
 	int x, y;
 	glBegin(GL_LINES);
 	glColor3f(r, g, b);
 	//draw the head
-	for (int k = 0; k < 32; k++){
-		x = (float)k / 2.0 * cos(360 * M_PI / 180.0) + (positionX*squareSize);
-		y = (float)k / 2.0* sin(360 * M_PI / 180.0) + (positionY*squareSize);
-		for (int i = 180; i <= 360; i++){
+	for (int k = 0; k < 32; k++) {
+		x = (float)k / 2.0 * cos(360 * M_PI / 180.0) + (positionX * squareSize);
+		y = (float)k / 2.0 * sin(360 * M_PI / 180.0) + (positionY * squareSize);
+		for (int i = 180; i <= 360; i++) {
 			glVertex2f(x, y);
-			x = (float)k / 2.0 * cos(i * M_PI / 180.0) + (positionX*squareSize);
-			y = (float)k / 2.0* sin(i * M_PI / 180.0) + (positionY*squareSize);
+			x = (float)k / 2.0 * cos(i * M_PI / 180.0) + (positionX * squareSize);
+			y = (float)k / 2.0 * sin(i * M_PI / 180.0) + (positionY * squareSize);
 			glVertex2f(x, y);
 		}
 	}
-	glEnd();	
+	glEnd();
 	//draw body
-	glRectf((positionX*squareSize) - 17, positionY*squareSize, (positionX*squareSize) + 15, (positionY*squareSize) + 15);
+	glRectf((positionX * squareSize) - 17, positionY * squareSize, (positionX * squareSize) + 15, (positionY * squareSize) + 15);
 	glBegin(GL_POINTS);
 	glColor3f(0, 0.2, 0.4);
 	//draw eyes and legs
-	glVertex2f((positionX*squareSize) - 11, (positionY*squareSize) + 14); //legs
-	glVertex2f((positionX*squareSize) - 1, (positionY*squareSize) + 14); //legs
-	glVertex2f((positionX*squareSize) + 8, (positionY*squareSize) + 14); //legs
-	glVertex2f((positionX*squareSize) + 4, (positionY*squareSize) - 3); //eyes
-	glVertex2f((positionX*squareSize) - 7, (positionY*squareSize) - 3); //eyes 
+	glVertex2f((positionX * squareSize) - 11, (positionY * squareSize) + 14); //legs
+	glVertex2f((positionX * squareSize) - 1, (positionY * squareSize) + 14); //legs
+	glVertex2f((positionX * squareSize) + 8, (positionY * squareSize) + 14); //legs
+	glVertex2f((positionX * squareSize) + 4, (positionY * squareSize) - 3); //eyes
+	glVertex2f((positionX * squareSize) - 7, (positionY * squareSize) - 3); //eyes 
 	glEnd();
 }
 
 //Method to update the position of the monsters randomly
-void updateMonster(float* monster, int id){
-		//find the current position of the monster
-		int x1Quadrant = (int)((monster[0] - (2/squareSize)) - (16.0 *cos(360 * M_PI / 180.0)) / squareSize);
-		int x2Quadrant = (int)((monster[0] + (2/squareSize)) + (16.0 *cos(360 * M_PI / 180.0)) / squareSize);
-		int y1Quadrant = (int)((monster[1] - (2/squareSize)) - (16.0 *cos(360 * M_PI / 180.0)) / squareSize);
-		int y2Quadrant = (int)((monster[1] + (2/squareSize)) + (16.0 *cos(360 * M_PI / 180.0)) / squareSize);
-		//move him acording to its direction until he hits an obstacle
-		switch ((int)monster[2]){
-		case 1:
-			if (!bitmap.at(x1Quadrant).at((int)monster[1])){ 
-				monster[0] -= 2 / squareSize;
-			}else {
-				int current = monster[2];
-				do{
-					monster[2] =  (rand() % 4) + 1;
-				} while (current == (int) monster[2]);
-			}
-			break;
-		case 2:
-			if (!bitmap.at(x2Quadrant).at((int)monster[1])){
-				monster[0] += 2 / squareSize;
-			}
-			else {
-				int current = monster[2];
-				do{
-					monster[2] = (rand() % 4) + 1;
-				} while (current == (int)monster[2]);
-			}
-			break;
-		case 3:
-			if (!bitmap.at((int)monster[0]).at(y1Quadrant)){
-				monster[1] -= 2 / squareSize;
-			}
-			else {
-				int current = monster[2];
-				do{
-					monster[2] = (rand() % 4) + 1;
-				} while (current == (int)monster[2]);
-			}
-			break;
-		case 4:
-			if (!bitmap.at((int)monster[0]).at(y2Quadrant)){
-				monster[1] += 2 / squareSize;
-			}
-			else {
-				int current = monster[2];
-				do{
-					monster[2] = (rand() % 4) + 1;
-				} while (current == (int)monster[2]);
-			}
-			break;
-		default:
-			break;
+void updateMonster(float* monster, int id) {
+	//find the current position of the monster
+	int x1Quadrant = (int)((monster[0] - (2 / squareSize)) - (16.0 * cos(360 * M_PI / 180.0)) / squareSize);
+	int x2Quadrant = (int)((monster[0] + (2 / squareSize)) + (16.0 * cos(360 * M_PI / 180.0)) / squareSize);
+	int y1Quadrant = (int)((monster[1] - (2 / squareSize)) - (16.0 * cos(360 * M_PI / 180.0)) / squareSize);
+	int y2Quadrant = (int)((monster[1] + (2 / squareSize)) + (16.0 * cos(360 * M_PI / 180.0)) / squareSize);
+	//move him acording to its direction until he hits an obstacle
+	switch ((int)monster[2]) {
+	case 1:
+		if (!bitmap.at(x1Quadrant).at((int)monster[1])) {
+			monster[0] -= 2 / squareSize;
 		}
+		else {
+			int current = monster[2];
+			do {
+				monster[2] = (rand() % 4) + 1;
+			} while (current == (int)monster[2]);
+		}
+		break;
+	case 2:
+		if (!bitmap.at(x2Quadrant).at((int)monster[1])) {
+			monster[0] += 2 / squareSize;
+		}
+		else {
+			int current = monster[2];
+			do {
+				monster[2] = (rand() % 4) + 1;
+			} while (current == (int)monster[2]);
+		}
+		break;
+	case 3:
+		if (!bitmap.at((int)monster[0]).at(y1Quadrant)) {
+			monster[1] -= 2 / squareSize;
+		}
+		else {
+			int current = monster[2];
+			do {
+				monster[2] = (rand() % 4) + 1;
+			} while (current == (int)monster[2]);
+		}
+		break;
+	case 4:
+		if (!bitmap.at((int)monster[0]).at(y2Quadrant)) {
+			monster[1] += 2 / squareSize;
+		}
+		else {
+			int current = monster[2];
+			do {
+				monster[2] = (rand() % 4) + 1;
+			} while (current == (int)monster[2]);
+		}
+		break;
+	default:
+		break;
+	}
 }
 
 //Method to set the pressed key
-void keyPressed(unsigned char key, int x, int y){
+void keyPressed(unsigned char key, int x, int y) {
 	keyStates[key] = true;
 }
 
 //Method to unset the released key
-void keyUp(unsigned char key, int x, int y){
+void keyUp(unsigned char key, int x, int y) {
 	keyStates[key] = false;
 }
 
 //Method to reset all the variable necessaries to start the game again
-void resetGame(){
+void resetGame() {
 	over = false;
 	xIncrement = 0;
-	yIncrement = 0; 
+	yIncrement = 0;
 	rotation = 0;
 	monster1 = new float[3] {10.5, 8.5, 1.0};
 	monster2 = new float[3] {13.5, 1.5, 2.0};
 	monster3 = new float[3] {4.5, 6.5, 3.0};
 	monster4 = new float[3] {2.5, 13.5, 4.0};
 	points = 0;
-	for (int i = 0; i < 256; i++){
+	for (int i = 0; i < 256; i++) {
 		keyStates[i] = false;
 	}
 	food = { 1.5, 1.5, 1.5, 2.5, 1.5, 3.5, 1.5, 4.5, 1.5, 5.5, 1.5, 6.5, 1.5, 7.5, 1.5, 8.5, 1.5, 9.5, 1.5, 10.5, 1.5, 11.5, 1.5, 12.5, 1.5, 13.5, 2.5, 1.5, 2.5, 6.5, 2.5, 9.5, 2.5, 13.5, 3.5, 1.5, 3.5, 2.5, 3.5, 3.5, 3.5, 4.5, 3.5, 6.5, 3.5, 8.5, 3.5, 9.5, 3.5, 10.5, 3.5, 11.5, 3.5, 13.5, 4.5, 1.5, 4.5, 4.5, 4.5, 5.5, 4.5, 6.5, 4.5, 7.5, 4.5, 8.5, 4.5, 11.5, 4.5, 12.5, 4.5, 13.5, 5.5, 1.5, 5.5, 2.5, 5.5, 5.5, 5.5, 10.5, 5.5, 11.5, 5.5, 13.5, 6.5, 2.5, 6.5, 3.5, 6.5, 4.5, 6.5, 5.5, 6.5, 7.5, 6.5, 10.5, 6.5, 13.5, 7.5, 5.5, 7.5, 6.5, 7.5, 7.5, 7.5, 9.5, 7.5, 10.5, 7.5, 11.5, 7.5, 12.5, 7.5, 13.5, 8.5, 2.5, 8.5, 3.5, 8.5, 4.5, 8.5, 5.5, 8.5, 7.5, 8.5, 10.5, 8.5, 13.5, 9.5, 1.5, 9.5, 2.5, 9.5, 5.5, 9.5, 10.5, 9.5, 11.5, 9.5, 13.5, 10.5, 1.5, 10.5, 4.5, 10.5, 5.5, 10.5, 6.5, 10.5, 7.5, 10.5, 8.5, 10.5, 11.5, 10.5, 12.5, 10.5, 13.5, 11.5, 1.5, 11.5, 2.5, 11.5, 3.5, 11.5, 4.5, 11.5, 5.5, 11.5, 6.5, 11.5, 8.5, 11.5, 9.5, 11.5, 10.5, 11.5, 11.5, 11.5, 13.5, 12.5, 1.5, 12.5, 6.5, 12.5, 9.5, 12.5, 13.5, 13.5, 1.5, 13.5, 2.5, 13.5, 3.5, 13.5, 4.5, 13.5, 5.5, 13.5, 6.5, 13.5, 7.5, 13.5, 8.5, 13.5, 9.5, 13.5, 10.5, 13.5, 11.5, 13.5, 12.5, 13.5, 13.5 };
 }
 
 //Method to update the movement of the pacman according to the movement keys pressed
-void keyOperations(){
+void keyOperations() {
 	//get current position
 	float  x = (1.5 + xIncrement) * squareSize;
 	float y = (1.5 + yIncrement) * squareSize;
 	//update according to keys pressed
-	if (keyStates['a']){
+	if (keyStates['a']) {
 		x -= 2;
-		int x1Quadrant = (int)((x - 16.0 *cos(360 * M_PI / 180.0)) / squareSize);
-		if (!bitmap.at(x1Quadrant).at((int)y/squareSize)){
+		int x1Quadrant = (int)((x - 16.0 * cos(360 * M_PI / 180.0)) / squareSize);
+		if (!bitmap.at(x1Quadrant).at((int)y / squareSize)) {
 			xIncrement -= 2 / squareSize;
 			rotation = 2;
 		}
 	}
-	if (keyStates['d']){
+	if (keyStates['d']) {
 		x += 2;
-		int x2Quadrant = (int)((x + 16.0 *cos(360 * M_PI / 180.0)) / squareSize);
-		if (!bitmap.at(x2Quadrant).at((int)y / squareSize)){
+		int x2Quadrant = (int)((x + 16.0 * cos(360 * M_PI / 180.0)) / squareSize);
+		if (!bitmap.at(x2Quadrant).at((int)y / squareSize)) {
 			xIncrement += 2 / squareSize;
 			rotation = 0;
 		}
 	}
-	if (keyStates['w']){
+	if (keyStates['w']) {
 		y -= 2;
-		int y1Quadrant = (int)((y - 16.0 *cos(360 * M_PI / 180.0)) / squareSize);
-		if (!bitmap.at((int)x/squareSize).at(y1Quadrant)){
+		int y1Quadrant = (int)((y - 16.0 * cos(360 * M_PI / 180.0)) / squareSize);
+		if (!bitmap.at((int)x / squareSize).at(y1Quadrant)) {
 			yIncrement -= 2 / squareSize;
 			rotation = 3;
 		}
 	}
-	if (keyStates['s']){
+	if (keyStates['s']) {
 		y += 2;
-		int y2Quadrant = (int)((y + 16.0 *cos(360 * M_PI / 180.0)) / squareSize);
-		if (!bitmap.at((int)x / squareSize).at(y2Quadrant)){
+		int y2Quadrant = (int)((y + 16.0 * cos(360 * M_PI / 180.0)) / squareSize);
+		if (!bitmap.at((int)x / squareSize).at(y2Quadrant)) {
 			yIncrement += 2 / squareSize;
 			rotation = 1;
 		}
 	}
-	if (keyStates[' ']){
-		if (!replay && over){
-			resetGame();
-			replay = true;
-		}
-		else if (replay && over){
-			replay = false;
-		}
-	}
+	// SPACE key to always restart the game
+static bool spacePressedLastFrame = false;
+
+if (keyStates[' ']) {
+    if (!spacePressedLastFrame) {
+        spacePressedLastFrame = true;
+
+        resetGame(); // Always start a new game
+        over = false;
+        replay = false;
+    }
+} else {
+    spacePressedLastFrame = false;
+}
+
 }
 
 //Method to check if the game is over
-void gameOver(){
+void gameOver() {
 	int pacmanX = (int)(1.5 + xIncrement);
 	int pacmanY = (int)(1.5 + yIncrement);
 	int monster1X = (int)(monster1[0]);
@@ -308,115 +428,129 @@ void gameOver(){
 	int monster3Y = (int)(monster3[1]);
 	int monster4X = (int)(monster4[0]);
 	int monster4Y = (int)(monster4[1]);
-	if (pacmanX == monster1X && pacmanY == monster1Y){
+	if (pacmanX == monster1X && pacmanY == monster1Y) {
 		over = true;
 	}
-	if (pacmanX == monster2X && pacmanY == monster2Y){
+	if (pacmanX == monster2X && pacmanY == monster2Y) {
 		over = true;
 	}
-	if (pacmanX == monster3X && pacmanY == monster3Y){
+	if (pacmanX == monster3X && pacmanY == monster3Y) {
 		over = true;
 	}
-	if (pacmanX == monster4X && pacmanY == monster4Y){
+	if (pacmanX == monster4X && pacmanY == monster4Y) {
 		over = true;
 	}
-	if (points == 106){
+	if (points == 106) {
 		over = true;
 	}
 }
 
 //Method to display the results of the game at the ends
-void resultsDisplay(){
-	if (points == 106){
-		//Won
-		char* message = "*************************************";
+void resultsDisplay() {
+	if (points == 106) {
+		// Won
+		string message = "*";
 		glRasterPos2f(170, 250);
-		while (*message)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *message++);
+		for (char ch : message)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ch);
+
 		message = "CONGRATULATIONS, YOU WON! ";
 		glColor3f(1, 1, 1);
 		glRasterPos2f(200, 300);
-		while (*message)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *message++);
-		message = "*************************************";
+		for (char ch : message)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ch);
+
+		message = "*";
 		glRasterPos2f(170, 350);
-		while (*message)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *message++);
+		for (char ch : message)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ch);
+
 		message = "To start or restart the game, press the space key.";
 		glRasterPos2f(170, 550);
-		while (*message)
-			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *message++);
-	}else {
-		//Lost
-		char* message = "*************************";
+		for (char ch : message)
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ch);
+	}
+	else {
+		// Lost
+		string message = "*";
 		glRasterPos2f(210, 250);
-		while (*message)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *message++);
+		for (char ch : message)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ch);
+
 		message = "SORRY, YOU LOST ... ";
 		glColor3f(1, 1, 1);
 		glRasterPos2f(250, 300);
-		while (*message)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *message++);
-		message = "*************************";
+		for (char ch : message)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ch);
+
+		message = "*";
 		glRasterPos2f(210, 350);
-		while (*message)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *message++);
-		message = "You got: ";
+		for (char ch : message)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ch);
+
+		message = "You got:";
 		glRasterPos2f(260, 400);
-		while (*message)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *message++);
-		string result = to_string(points);
-		message = (char*)result.c_str();
+		for (char ch : message)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ch);
+
+		string result = std::to_string(points);
 		glRasterPos2f(350, 400);
-		while (*message)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *message++);
-		message = " points!";
+		for (char ch : result)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ch);
+
+		message = "points!";
 		glRasterPos2f(385, 400);
-		while (*message)
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *message++);
+		for (char ch : message)
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ch);
+
 		message = "To start or restart the game, press the space key.";
 		glRasterPos2f(170, 550);
-		while (*message)
-			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *message++);
+		for (char ch : message)
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ch);
 	}
 }
 
 //Method to display the starting instructions
-void welcomeScreen(){
+void welcomeScreen() {
 	glClearColor(0, 0.2, 0.4, 1.0);
-	char* message = "*************************************";
+	string message = "*";
 	glRasterPos2f(150, 200);
-	while (*message)
-		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *message++);
+	for (char ch : message)
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ch);
+
 	message = "PACMAN - by Patricia Terol";
 	glColor3f(1, 1, 1);
 	glRasterPos2f(225, 250);
-	while (*message)
-		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *message++);
-	message = "*************************************";
+	for (char ch : message)
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ch);
+
+	message = "*";
 	glRasterPos2f(150, 300);
-	while (*message)
-		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *message++);
+	for (char ch : message)
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ch);
+
 	message = "To control Pacman use A to go right, D to go left, W to go up and S to go down.";
 	glRasterPos2f(50, 400);
-	while (*message)
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *message++);
+	for (char ch : message)
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ch);
+
 	message = "To start or restart the game, press the space key.";
 	glRasterPos2f(170, 450);
-	while (*message)
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *message++);
+	for (char ch : message)
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ch);
 }
 
+
 //Method to display the screen and its elements
-void display(){
-	if (points == 1){
+void display() {
+	if (points == 1) {
 		over = false;
 	}
 	keyOperations();
 	glClear(GL_COLOR_BUFFER_BIT);
 	gameOver();
-	if (replay){
-		if (!over){
+	if (replay) {
+		if (!over) {
 			drawLaberynth();
 			drawFood((1.5 + xIncrement) * squareSize, (1.5 + yIncrement) * squareSize);
 			drawPacman(1.5 + xIncrement, 1.5 + yIncrement, rotation);
@@ -440,7 +574,7 @@ void display(){
 }
 
 //Methdo to reshape the game is the screen size changes
-void reshape(int w, int h){
+void reshape(int w, int h) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
@@ -451,7 +585,7 @@ void reshape(int w, int h){
 
 
 //Main functions that controls the running of the game
-int main(int argc, char** argv){
+int main(int argc, char** argv) {
 	//initialize and create the screen
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -471,4 +605,3 @@ int main(int argc, char** argv){
 	glutMainLoop();
 	return 0;
 }
-
